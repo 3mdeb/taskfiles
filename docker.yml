@@ -1,0 +1,26 @@
+version: '3'
+
+tasks:
+  run:
+    desc: Run a command in a Docker container
+    internal: true
+    cmds:
+      - |
+        MOUNT_ARGS=""
+        for vol in $(echo "{{.VOLUMES}}" | tr ',' '\n'); do
+          MOUNT_ARGS="$MOUNT_ARGS -v $vol"
+        done
+
+        ENV_ARGS=""
+        if [ -n "{{.ENV}}" ]; then
+          for env in $(echo "{{.ENV}}" | tr ',' '\n'); do
+            ENV_ARGS="$ENV_ARGS -e $env"
+          done
+        fi
+
+        docker run --rm \
+          {{if .WORKDIR}}-w {{.WORKDIR}}{{end}} \
+          $MOUNT_ARGS \
+          $ENV_ARGS \
+          {{.IMAGE}} \
+          sh -c "{{.COMMAND}}"
