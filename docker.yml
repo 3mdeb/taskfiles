@@ -20,7 +20,8 @@ tasks:
 
         docker run --rm \
           {{if .WORKDIR}}-w {{.WORKDIR}}{{end}} \
+          {{if .ENTRYPOINT}}--entrypoint {{.ENTRYPOINT}}{{end}} \
           $MOUNT_ARGS \
           $ENV_ARGS \
           {{.IMAGE}} \
-          sh -c "{{.COMMAND}}"
+          {{if .ENTRYPOINT}}{{.ENTRYPOINT}} -c "{{.COMMAND}}"{{else}}sh -c "{{.COMMAND}}"{{end}}
