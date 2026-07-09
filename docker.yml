@@ -19,6 +19,7 @@ tasks:
         fi
 
         docker run --rm \
+          {{if .DOCKER_USER}} --user {{.DOCKER_USER}}{{end}} \
           {{if .WORKDIR}}-w {{.WORKDIR}}{{end}} \
           --entrypoint sh \
           $MOUNT_ARGS \
